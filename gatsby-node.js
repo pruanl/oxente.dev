@@ -29,6 +29,7 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
  * Here is the place where Gatsby creates the URLs for all the
  * posts, tags, pages and authors that we fetched from the Ghost site.
  */
+/*
 exports.createPages = ({ graphql, actions }) => {
     const { createPage } = actions;
     const blogPostTemplate = path.resolve(`src/templates/post.js`);
@@ -57,7 +58,7 @@ exports.createPages = ({ graphql, actions }) => {
         result.data.allMarkdownRemark.edges.forEach(({ node }) => {
             createPage({
                 // Path for this page — required
-                path: node.fields.slug,
+                path: `aloha`,
                 component: blogPostTemplate,
                 context: {
                     slug: node.fields.slug
@@ -65,7 +66,7 @@ exports.createPages = ({ graphql, actions }) => {
             });
         });
     });
-};
+};*/
 
 //Daqui pra baixo é dependencia do gosth
 
@@ -115,6 +116,15 @@ exports.createPages = async ({ graphql, actions }) => {
                     }
                 }
             }
+            allMarkdownRemark {
+                edges {
+                    node {
+                        fields {
+                            slug
+                        }
+                    }
+                }
+            }
         }
     `);
 
@@ -128,13 +138,15 @@ exports.createPages = async ({ graphql, actions }) => {
     const authors = result.data.allGhostAuthor.edges;
     const pages = result.data.allGhostPage.edges;
     const posts = result.data.allGhostPost.edges;
+    const blogPosts = result.data.allMarkdownRemark.edges;
 
     // Load templates
     const indexTemplate = path.resolve(`./src/templates/index.js`);
     const tagsTemplate = path.resolve(`./src/templates/tag.js`);
     const authorTemplate = path.resolve(`./src/templates/author.js`);
     const pageTemplate = path.resolve(`./src/templates/page.js`);
-    const postTemplate = path.resolve(`./src/templates/post.js`);
+    const blogPostTemplate = path.resolve(`src/templates/post.js`);
+    //const postTemplate = path.resolve(`./src/templates/post.js`);
 
     // Create tag pages
     tags.forEach(({ node }) => {
@@ -223,6 +235,7 @@ exports.createPages = async ({ graphql, actions }) => {
     });
 
     // Create pages
+
     pages.forEach(({ node }) => {
         // This part here defines, that our pages will use
         // a `/:slug/` permalink.
@@ -239,19 +252,13 @@ exports.createPages = async ({ graphql, actions }) => {
         });
     });
 
-    // Create post pages
-    posts.forEach(({ node }) => {
-        // This part here defines, that our posts will use
-        // a `/:slug/` permalink.
-        node.url = `/${node.slug}/`;
-
+    blogPosts.forEach(({ node }) => {
         createPage({
-            path: node.url,
-            component: postTemplate,
+            // Path for this page — required
+            path: node.fields.slug,
+            component: blogPostTemplate,
             context: {
-                // Data passed to context is available
-                // in page queries as GraphQL variables.
-                slug: node.slug
+                slug: node.fields.slug
             }
         });
     });
