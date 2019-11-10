@@ -2,7 +2,7 @@ backend:
   name: github
   repo: pruanl/oxente.dev
   branch: master # Branch to update (optional; defaults to master)
-  site_domain: https://epic-roentgen-77082c.netlify.com
+  site_domain: https://oxentedev.netlify.com
 
 publish_mode: editorial_workflow
 media_folder: "static/images"
